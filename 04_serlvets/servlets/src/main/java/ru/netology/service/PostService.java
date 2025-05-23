@@ -3,7 +3,6 @@ package ru.netology.service;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
-
 import java.util.List;
 
 public class PostService {
@@ -13,20 +12,19 @@ public class PostService {
     this.repository = repository;
   }
 
-  public List<Post> all() {
-    return repository.all();
-  }
+  public List<Post> all() { return repository.all(); }
 
   public Post getById(long id) {
-    return repository.getById(id).orElseThrow(NotFoundException::new);
+    return repository.getById(id).orElseThrow(() -> new NotFoundException("Post not found"));
   }
 
-  public Post save(Post post) {
-    return repository.save(post);
-  }
+  public Post save(Post post) { return repository.save(post); }
 
   public void removeById(long id) {
-    repository.removeById(id);
+    repository.getById(id).ifPresentOrElse(
+            p -> repository.removeById(id),
+            () -> { throw new NotFoundException("Post not found"); }
+    );
   }
 }
 
