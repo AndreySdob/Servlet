@@ -1,7 +1,7 @@
 package ru.netology.servlet;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.netology.config.AppConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.netology.controller.PostController;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class MainServlet extends HttpServlet {
+  @Autowired
   private PostController controller;
 
   @Override
   public void init() {
-    var context = new AnnotationConfigApplicationContext(AppConfig.class);
-    controller = context.getBean(PostController.class);
+    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
   }
 
   @Override
